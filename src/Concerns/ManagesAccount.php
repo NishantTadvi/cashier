@@ -2,6 +2,7 @@
 
 namespace Laravel\Cashier\Concerns;
 
+use Exception;
 use Laravel\Cashier\Cashier;
 use Stripe\Account as StripeAccount;
 use Illuminate\Support\Facades\Crypt;
