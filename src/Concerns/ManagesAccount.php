@@ -7,6 +7,7 @@ use Stripe\Account as StripeAccount;
 use Illuminate\Support\Facades\Crypt;
 use Laravel\Cashier\Exceptions\InvalidAccount;
 use Laravel\Cashier\Exceptions\AccountAlreadyCreated;
+use Stripe\StripeClient;
 
 trait ManagesAccount
 {
@@ -55,23 +56,20 @@ trait ManagesAccount
     
     public function createExpressAccount($code)
     {
-        $client = new Client(['base_uri' => 'https://connect.stripe.com/oauth/']);
+        list($response, $opts) = static::_staticRequest('get','https://connect.stripe.com/oauth/', [
+            'client_secret' => config('cashier.secret'),
+            'code' => $code,
+            'grant_type' => 'authorization_code'
+        ], ['apiBase' => '']);
 
-        $request = $client->request("POST", "token", [
-            'form_params' => [
-                'client_secret' => config('cashier.secret'),
-                'code' => $code,
-                'grant_type' => 'authorization_code'
-            ]
-        ]);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
 
-        $account = json_decode($request->getBody()->getContents());
-
-        $this->stripe_account_id = $account->stripe_user_id;
+        $this->stripe_account_id = $obj->stripe_user_id;
 
         $this->save();
 
-        return $account;
+        return $obj;
     }
 
     /**
