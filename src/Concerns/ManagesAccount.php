@@ -62,7 +62,7 @@ trait ManagesAccount
             'grant_type' => 'authorization_code'
         ];
         
-        $ch = curl_init('https://connect.stripe.com/oauth');
+        $ch = curl_init('https://connect.stripe.com/oauth/token');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         
