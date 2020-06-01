@@ -3,9 +3,10 @@
 namespace Laravel\Cashier\Concerns;
 
 use Laravel\Cashier\Cashier;
-use Laravel\Cashier\Exceptions\AccountAlreadyCreated;
-use Laravel\Cashier\Exceptions\InvalidAccount;
 use Stripe\Account as StripeAccount;
+use Illuminate\Support\Facades\Crypt;
+use Laravel\Cashier\Exceptions\InvalidAccount;
+use Laravel\Cashier\Exceptions\AccountAlreadyCreated;
 
 trait ManagesAccount
 {
