@@ -72,8 +72,11 @@ trait ManagesAccount
         // close the connection, release resources used
         curl_close($ch);
         
-        // do anything you want with your response
-        $data = json_decode($response);
+        $data = json_decode($response, true);
+
+        if(\property_exists($data,'error')){
+            throw new Exception("Error Processing Request");
+        }
 
         $this->stripe_account_id = $data['stripe_user_id'];
 
