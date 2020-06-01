@@ -83,7 +83,7 @@ trait ManagesAccount
      * @param  array  $options
      * @return \Stripe\Account
      */
-    public function updateStripeCustomer(array $options = [])
+    public function updateStripeAccount(array $options = [])
     {
         return StripeAccount::update(
             $this->stripe_account_id, $options, $this->stripeOptions()
