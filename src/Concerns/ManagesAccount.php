@@ -14,7 +14,7 @@ trait ManagesAccount
      *
      * @return string|null
      */
-    public function stripeId()
+    public function stripeAccountId()
     {
         return $this->stripe_account_id;
     }
