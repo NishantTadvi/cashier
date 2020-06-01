@@ -62,6 +62,10 @@ trait ManagesAccount
         }
 
         $options['type'] = 'custom';
+        $options['requested_capabilities'] = [
+            'card_payments',
+            'transfers',
+        ];
 
         // Here we will create the account instance on Stripe and store the ID of the
         // user from Stripe. This ID will correspond with the Stripe user instances
