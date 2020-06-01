@@ -116,35 +116,4 @@ trait ManagesAccount
 
         return StripeAccount::retrieve($this->stripe_account_id, $this->stripeOptions());
     }
-
-    /**
-     * Get the email address used to create the customer in Stripe.
-     *
-     * @return string|null
-     */
-    public function stripeEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Get the Stripe supported currency used by the entity.
-     *
-     * @return string
-     */
-    public function preferredCurrency()
-    {
-        return config('cashier.currency');
-    }
-
-    /**
-     * Get the default Stripe API options for the current Billable model.
-     *
-     * @param  array  $options
-     * @return array
-     */
-    public function stripeOptions(array $options = [])
-    {
-        return Cashier::stripeOptions($options);
-    }
 }

@@ -11,8 +11,8 @@ use Laravel\Cashier\Concerns\ManagesPaymentMethods;
 
 trait Billable
 {
-    use ManagesAccount;
     use ManagesCustomer;
+    use ManagesAccount;
     use ManagesInvoices;
     use ManagesPaymentMethods;
     use ManagesSubscriptions;
