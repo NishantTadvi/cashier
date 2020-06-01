@@ -74,7 +74,7 @@ trait ManagesAccount
         
         $data = json_decode($response, true);
 
-        if(\property_exists($data,'error')){
+        if(isset($data['error'])){
             throw new Exception("Error Processing Request");
         }
 
