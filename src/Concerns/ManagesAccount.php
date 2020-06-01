@@ -43,7 +43,7 @@ trait ManagesAccount
         }
     }
 
-    public function createExpressLink()
+    public function getExpressLink()
     {
         return config('cashier.connect') . '?' . http_build_query([
             'client_id' => config('cashier.client_id'),
