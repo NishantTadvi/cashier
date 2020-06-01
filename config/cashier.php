@@ -17,6 +17,12 @@ return [
 
     'secret' => env('STRIPE_SECRET'),
 
+    'connect' => env('STRIPE_CONNECT'),
+
+    'redirect_url' => env('STRIPE_REDIRECT_URL'),
+
+    'client_id' => env('STRIPE_CLIENT_ID'),
+
     /*
     |--------------------------------------------------------------------------
     | Cashier Path
@@ -125,5 +131,6 @@ return [
     */
 
     'logger' => env('CASHIER_LOGGER'),
+
 
 ];

@@ -26,7 +26,7 @@ trait ManagesAccount
      */
     public function hasStripeAccountId()
     {
-        return ! is_null($this->stripe_account_id);
+        return !is_null($this->stripe_account_id);
     }
 
     /**
@@ -38,9 +38,39 @@ trait ManagesAccount
      */
     protected function assertAccountExists()
     {
-        if (! $this->hasStripeAccountId()) {
+        if (!$this->hasStripeAccountId()) {
             throw InvalidAccount::notYetCreated($this);
         }
+    }
+
+    public function getExpressLink()
+    {
+        return config('cashier.connect') . '?' . http_build_query([
+            'client_id' => config('cashier.client_id'),
+            'redirect_url' => config('cashier.redirect_url'),
+            'state' => Crypt::encrypt($this->id)
+        ]);
+    }
+    
+    public function createExpressAccount($code)
+    {
+        $client = new Client(['base_uri' => 'https://connect.stripe.com/oauth/']);
+
+        $request = $client->request("POST", "token", [
+            'form_params' => [
+                'client_secret' => config('cashier.secret'),
+                'code' => $code,
+                'grant_type' => 'authorization_code'
+            ]
+        ]);
+
+        $account = json_decode($request->getBody()->getContents());
+
+        $this->stripe_account_id = $account->stripe_user_id;
+
+        $this->save();
+
+        return $account;
     }
 
     /**
@@ -57,7 +87,7 @@ trait ManagesAccount
             throw AccountAlreadyCreated::exists($this);
         }
 
-        if (! array_key_exists('email', $options) && $email = $this->stripeEmail()) {
+        if (!array_key_exists('email', $options) && $email = $this->stripeEmail()) {
             $options['email'] = $email;
         }
 
@@ -71,7 +101,8 @@ trait ManagesAccount
         // user from Stripe. This ID will correspond with the Stripe user instances
         // and allow us to retrieve users from Stripe later when we need to work.
         $account = StripeAccount::create(
-            $options, $this->stripeOptions()
+            $options,
+            $this->stripeOptions()
         );
 
         $this->stripe_account_id = $account->id;
@@ -90,7 +121,9 @@ trait ManagesAccount
     public function updateStripeAccount(array $options = [])
     {
         return StripeAccount::update(
-            $this->stripe_account_id, $options, $this->stripeOptions()
+            $this->stripe_account_id,
+            $options,
+            $this->stripeOptions()
         );
     }
 
