@@ -56,20 +56,30 @@ trait ManagesAccount
     
     public function createExpressAccount($code)
     {
-        list($response, $opts) = static::_staticRequest('get','https://connect.stripe.com/oauth/', [
+        $post = [
             'client_secret' => config('cashier.secret'),
             'code' => $code,
             'grant_type' => 'authorization_code'
-        ], ['apiBase' => '']);
+        ];
+        
+        $ch = curl_init('https://connect.stripe.com/oauth');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        
+        // execute!
+        $response = curl_exec($ch);
+        
+        // close the connection, release resources used
+        curl_close($ch);
+        
+        // do anything you want with your response
+        $data = json_decode($response);
 
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
-        $obj->setLastResponse($response);
-
-        $this->stripe_account_id = $obj->stripe_user_id;
+        $this->stripe_account_id = $data['stripe_user_id'];
 
         $this->save();
 
-        return $obj;
+        return $data;
     }
 
     /**
